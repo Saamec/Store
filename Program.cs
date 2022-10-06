@@ -6,19 +6,23 @@ IDProduct<int> erger2 = new IDProduct<int>(86, "Удивительная при�
 Warehouse<Product>.ADD(erger);
 Warehouse<Product>.ADD(erger2);
 
+Person Vasya = new Person("Вася", "Москва", "hw44tru3@mail.ru");
+List<Product> test = Vasya.Purchase(Warehouse<Product>.arrayGoods, 2);
+Console.WriteLine(Vasya.Payment(test));
+
 
 
 int SumOrder(List<Product> arrayGoods)
 {
     int sum = 0;
-    for (int i = 0; i < Warehouse<Product>.arrayGoods.ToArray().Length; i++)
+    for (int i = 0; i < Warehouse<Product>.arrayGoods.Count; i++)
     {
         sum += Warehouse<Product>.arrayGoods[i].Cost;
     }
     Console.WriteLine(sum);
     return sum;
 }
-SumOrder(Warehouse<Product>.arrayGoods);
+//SumOrder(Warehouse<Product>.arrayGoods);
 
 
 
@@ -66,8 +70,50 @@ public abstract class Bayer
     string Adress;
     string Email;
 
-    internal abstract string Purchase(List<Product> list);
-    internal abstract bool Payment();
+    internal abstract List<Product> Purchase(List<Product> list, int count);
+    internal abstract string Payment(List<Product> list);
+    
+}
+
+public class Person : Bayer
+{
+    internal string Name { get; set; }
+    internal string Address { get; set; }
+    internal string Email { get; set; }
+
+    internal Person (string name, string address, string email)
+    {
+        Name = name;
+        Address = address;
+        Email = email;
+    }
+    internal override List<Product> Purchase(List<Product> list, int count)
+    {
+        int bayRange = list.Count;
+        Random random = new Random();
+        List<Product> productList = new List<Product>();    
+        for(int i = 0; i < count; i++)
+        {
+            productList.Add(list[random.Next(0, bayRange)]);
+        }
+        return productList;
+    }
+
+    internal override string Payment(List<Product> list)
+    {
+        int count = 0;
+        string str = "Покупатель " + Name + "\n" +
+                     "Совершена покупка : \n";
+        foreach (Product product in list)
+        {
+            str += product.Name + "\n";
+            count += product.Cost;
+        }
+        str += "На общюю сумму " + count + "\n";
+
+        return str;
+    }
+
     
 }
 
