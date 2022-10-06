@@ -22,9 +22,12 @@ ListPersons.ADD(new Person("Сущев Иван Тимофеевич", "г.До�
 ListPersons.ADD(new Person("Задумкина Любовь Николаевна", "г.Севастополь, ул.Леваневского, д.45, кв.45", "fsdgjkifgul@mail.ru"));
 ListPersons.ADD(new Person("Никлин Валерий Сергеевич", "д. Выдрино, ул.Щеглова, д.1, кв.1", "arrrtF@mail.ru"));
 
-Person Vasya = new Person("Василий Иванович Сургучев", "г.Москва, пр.Ленинградский, д.48, кв.17", "hw44tru3@mail.ru");
-List<Product> test = Vasya.Purchase(Warehouse<Product>.arrayGoods, 2);
-Console.WriteLine(Vasya.Payment(test));
+//Person Vasya = new Person("Василий Иванович Сургучев", "г.Москва, пр.Ленинградский, д.48, кв.17", "hw44tru3@mail.ru");
+ShopDelivery delivery1 = new ShopDelivery();
+Order<ShopDelivery> order = new(1534, delivery1);                  //создаем заказ
+Person df = order.OrderPerson(ListPersons.arrayPersons);  // выбираем покупателя
+List<Product> test = df.Purchase(Warehouse<Product>.arrayGoods, 2);   // генерим покупки
+Console.WriteLine(df.Payment(test));       // печатаем информацию о покупках
 
 
 
@@ -142,39 +145,55 @@ public class Person : Bayer
         return str;
     }
 
-    abstract class Delivery
+    
+}
+abstract class Delivery
+{
+    public string Address;
+}
+
+class HomeDelivery : Delivery
+{
+    public void ShowAdress()
     {
-        public string Address;
-    }
-
-    class HomeDelivery : Delivery
-    {
-        /* ... */
-    }
-
-    class PickPointDelivery : Delivery
-    {
-        /* ... */
-    }
-
-    class ShopDelivery : Delivery
-    {
-        /* ... */
-    }
-
-    class Order<TDelivery> where TDelivery : Delivery
-    {
-        public TDelivery Delivery;
-
-        public int Number;
-
-        public Person OrderPerson(List<Person> person)
-        {
-            Random random = new Random();   
-            return person[random.Next(1, person.Count)];
-        }
-
-        
+       // Console.WriteLine(Address);
     }
 }
 
+class PickPointDelivery : Delivery
+{
+    public void ShowAdress()
+    {
+        //Console.WriteLine(Address);
+    }
+}
+
+class ShopDelivery : Delivery
+{
+    public string Address = "eghethgethe";
+}
+
+class Order<TDelivery> where TDelivery : Delivery
+{
+    public TDelivery Delivery;
+
+    public int Number { get; set; }
+
+    
+    public Order(int value, TDelivery delivery)
+    {
+        if (delivery is ShopDelivery)
+        {
+            Number = value;
+            Console.WriteLine("|Номер заказа *" + value + "* адрес получения *" + delivery.Address);
+        }
+    }
+
+    public Person OrderPerson(List<Person> person)
+    {
+        Random random = new Random();
+        return person[random.Next(1, person.Count)];
+    }
+    
+
+}
