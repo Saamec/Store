@@ -1,22 +1,20 @@
 ﻿
 
-StringIDProduct erger = new StringIDProduct("wefw", "wrgwg", 129, "toy");
-Warehouse<StringIDProduct>.arrayGoods.Add(erger);
-IntIDProduct tyty = new IntIDProduct(234, "wwgg", 567, "345r24");
-Warehouse<IntIDProduct>.arrayGoods.Add(tyty);
-Warehouse<Product<int>>.ADD(tyty);
+IDProduct<string> erger = new IDProduct<string>("wefw", "wrgwg", 129, "toy");
+IDProduct<int> erger2 = new IDProduct<int>(86, "wrgwg", 129, "toy");
+
+Warehouse<Product>.ADD(erger);
+Warehouse<Product>.ADD(erger2);
 
 
 
-public class Product<TID>
+public class Product
 {
-    internal TID IDProduct { get; set; }
     internal string Name { get; set; }
     internal int Cost { get; set; }
 
-    protected Product(TID idPoduct, string name, int cost)
-    {
-        IDProduct = idPoduct;
+    protected Product(string name, int cost)
+    { 
         Name = name;
         Cost = cost;
     }
@@ -27,21 +25,15 @@ public class Product<TID>
     }
 }
 
-public class StringIDProduct : Product<String>
+public class IDProduct <T>: Product
 {
     string typeProduct { get; set; }
-    public  StringIDProduct(string IDproduct, string Name, int Cost, string typeProduct) : base(IDproduct, Name, Cost)
+    T IDproduct { get; set; }
+
+    public IDProduct(T IDproduct, string Name, int Cost, string typeProduct) : base(Name, Cost)
     {
         this.typeProduct = typeProduct; 
-    }
-}
-
-public class IntIDProduct : Product<int>
-{
-    string typeProduct { get; set; }
-    internal IntIDProduct(int IDproduct, string Name, int Cost, string typeProduct) : base(IDproduct, Name, Cost)
-    {
-        this.typeProduct = typeProduct;
+        this.IDproduct = IDproduct;
     }
 }
 
@@ -53,8 +45,7 @@ public static class Warehouse <T> where T : class
 
     internal static void ADD(T value)
     {
-        if (value is StringIDProduct) arrayGoods.Add(value);
+        arrayGoods.Add(value);
     }            
-
 }
 
